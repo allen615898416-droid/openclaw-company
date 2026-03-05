@@ -1,0 +1,39 @@
+# OpenClaw Runtime
+.openclaw/
+.openclaw-backup-*/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# 实际配置文件（包含敏感信息）
+openclaw.json
+**/MEMORY.md
+
+# 临时文件
+*.tmp
+*.temp
+.cache/

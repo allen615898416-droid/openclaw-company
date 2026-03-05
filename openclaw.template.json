@@ -1,0 +1,221 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.3.2"
+  },
+  "wizard": {
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
+  },
+  "auth": {
+    "profiles": {
+      "moonshot:default": {
+        "provider": "moonshot",
+        "mode": "api_key"
+      }
+    }
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "moonshot": {
+        "baseUrl": "https://api.moonshot.cn/v1",
+        "apiKey": "YOUR_MOONSHOT_API_KEY_HERE",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "moonshot/kimi-k2.5",
+            "name": "kimi-k2.5",
+            "reasoning": false,
+            "input": ["text"],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 256000,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "moonshot/kimi-k2.5"
+      },
+      "models": {},
+      "workspace": "/Users/YOUR_USERNAME/.openclaw/workspace",
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "maxConcurrent": 2,
+      "subagents": {
+        "maxConcurrent": 3
+      },
+      "sandbox": {
+        "mode": "off"
+      }
+    },
+    "list": [
+      {
+        "id": "ceo",
+        "name": "业务总负责人",
+        "workspace": "~/.openclaw/workspace-ceo",
+        "identity": {
+          "name": "业务总负责人",
+          "emoji": "👑"
+        },
+        "subagents": {
+          "allowAgents": [
+            "product-lead",
+            "engineering-manager",
+            "growth-lead"
+          ]
+        }
+      },
+      {
+        "id": "product-lead",
+        "name": "商务负责人",
+        "workspace": "~/.openclaw/workspace-product-lead",
+        "identity": {
+          "name": "商务负责人",
+          "emoji": "🤝"
+        }
+      },
+      {
+        "id": "engineering-manager",
+        "name": "产研负责人",
+        "workspace": "~/.openclaw/workspace-engineering-manager",
+        "identity": {
+          "name": "产研负责人",
+          "emoji": "🔧"
+        }
+      },
+      {
+        "id": "growth-lead",
+        "name": "运营负责人",
+        "workspace": "~/.openclaw/workspace-growth-lead",
+        "identity": {
+          "name": "运营负责人",
+          "emoji": "📊"
+        }
+      }
+    ]
+  },
+  "tools": {
+    "agentToAgent": {
+      "enabled": true,
+      "allow": [
+        "ceo",
+        "product-lead",
+        "engineering-manager",
+        "growth-lead"
+      ]
+    },
+    "sessions": {
+      "visibility": "all"
+    }
+  },
+  "bindings": [
+    {
+      "agentId": "ceo",
+      "match": {
+        "channel": "telegram",
+        "accountId": "ceo"
+      }
+    },
+    {
+      "agentId": "product-lead",
+      "match": {
+        "channel": "telegram",
+        "accountId": "product-lead"
+      }
+    },
+    {
+      "agentId": "engineering-manager",
+      "match": {
+        "channel": "telegram",
+        "accountId": "engineering-manager"
+      }
+    },
+    {
+      "agentId": "growth-lead",
+      "match": {
+        "channel": "telegram",
+        "accountId": "growth-lead"
+      }
+    }
+  ],
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw"
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "dmPolicy": "pairing",
+      "groupPolicy": "allowlist",
+      "streaming": "partial",
+      "chunkMode": "newline",
+      "textChunkLimit": 4000,
+      "accounts": {
+        "ceo": {
+          "dmPolicy": "pairing",
+          "botToken": "YOUR_CEO_BOT_TOKEN",
+          "groupPolicy": "allowlist",
+          "streaming": "partial"
+        },
+        "product-lead": {
+          "dmPolicy": "pairing",
+          "botToken": "YOUR_PRODUCT_LEAD_BOT_TOKEN",
+          "groupPolicy": "allowlist",
+          "streaming": "partial"
+        },
+        "engineering-manager": {
+          "dmPolicy": "pairing",
+          "botToken": "YOUR_ENGINEERING_MANAGER_BOT_TOKEN",
+          "groupPolicy": "allowlist",
+          "streaming": "partial"
+        },
+        "growth-lead": {
+          "dmPolicy": "pairing",
+          "botToken": "YOUR_GROWTH_LEAD_BOT_TOKEN",
+          "groupPolicy": "allowlist",
+          "streaming": "partial"
+        },
+        "default": {
+          "dmPolicy": "pairing",
+          "groupPolicy": "allowlist",
+          "streaming": "partial"
+        }
+      }
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
+    "auth": {
+      "mode": "token",
+      "token": "YOUR_GATEWAY_TOKEN_HERE"
+    },
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    }
+  },
+  "plugins": {
+    "entries": {
+      "telegram": {
+        "enabled": true
+      }
+    }
+  }
+}
