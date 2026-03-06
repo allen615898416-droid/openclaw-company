@@ -469,6 +469,103 @@
     color: rgba(255,255,255,0.2);
     z-index: 100;
   }
+
+  /* ===== 移动端适配 ===== */
+  @media screen and (max-width: 768px) {
+    body { overflow-y: auto; height: auto; }
+    .slide { padding: 30px 20px; height: auto; min-height: 100vh; position: relative; }
+    .slide.active { display: flex; }
+
+    /* Cover */
+    .cover .logo { font-size: 48px; margin-bottom: 12px; }
+    .cover h1 { font-size: 28px; }
+    .cover .subtitle { font-size: 15px; margin-bottom: 24px; }
+    .cover .meta { font-size: 14px; }
+
+    /* Pain Points */
+    .pain-slide h2 { font-size: 24px; margin-bottom: 20px; }
+    .pain-grid { grid-template-columns: 1fr; gap: 12px; }
+    .pain-card { padding: 20px 16px; }
+    .pain-card .icon { font-size: 32px; margin-bottom: 8px; }
+    .pain-card h3 { font-size: 16px; margin-bottom: 6px; }
+    .pain-card p { font-size: 13px; line-height: 1.5; }
+
+    /* Solution Architecture */
+    .solution-slide h2 { font-size: 24px; margin-bottom: 12px; }
+    .solution-slide .tagline { font-size: 14px; margin-bottom: 20px; }
+    .architecture { flex-direction: column; gap: 0; }
+    .arch-avatar { width: 60px; height: 60px; font-size: 28px; margin-bottom: 6px; }
+    .arch-node .name { font-size: 14px; }
+    .arch-node .role { font-size: 11px; }
+    .arch-arrow { transform: rotate(90deg); margin: 8px 0; font-size: 24px; }
+    .arch-branch { gap: 10px; }
+    .arch-connector { gap: 10px; }
+    .arch-line { width: 30px; }
+
+    /* How It Works (video) */
+    .how-slide h2 { font-size: 24px; margin-bottom: 20px; }
+
+    /* SOUL */
+    .soul-slide h2 { font-size: 24px; margin-bottom: 20px; }
+    .soul-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .soul-card { padding: 16px 14px; gap: 8px; }
+    .soul-card .emoji { font-size: 28px; }
+    .soul-card h3 { font-size: 15px; }
+    .soul-card .desc { font-size: 12px; line-height: 1.5; }
+    .soul-card .tag { font-size: 10px; padding: 2px 6px; }
+
+    /* Design Principles */
+    .design-slide h2 { font-size: 24px; margin-bottom: 20px; }
+    .design-grid { grid-template-columns: 1fr; gap: 12px; }
+    .design-card { padding: 20px 16px; }
+    .design-card .num { font-size: 32px; }
+    .design-card h3 { font-size: 16px; margin-bottom: 6px; }
+    .design-card p { font-size: 13px; }
+
+    /* Achievements */
+    .achieve-slide h2 { font-size: 24px; margin-bottom: 20px; }
+    .achieve-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+    .achieve-card { padding: 16px 12px; }
+    .achieve-card .number { font-size: 32px; }
+    .achieve-card .unit { font-size: 14px; }
+    .achieve-card .label { font-size: 11px; }
+    .achieve-list { grid-template-columns: 1fr; padding: 16px 18px; gap: 10px; }
+    .achieve-item { font-size: 13px; gap: 8px; }
+
+    /* Scalability */
+    .scale-slide h2 { font-size: 24px; margin-bottom: 20px; }
+    .scale-content { grid-template-columns: 1fr; gap: 16px; }
+    .scale-box { padding: 20px 16px; }
+    .scale-box h3 { font-size: 18px; margin-bottom: 12px; }
+    .scale-tree { font-size: 12px; line-height: 1.8; }
+    .scale-scenario h4 { font-size: 14px; }
+    .scale-scenario p { font-size: 12px; }
+
+    /* Next Steps */
+    .next-slide h2 { font-size: 28px; margin-bottom: 24px; }
+    .next-steps { flex-direction: column; gap: 12px; align-items: center; }
+    .next-step { width: 100%; max-width: 320px; padding: 20px 16px; }
+    .next-step .step-num { width: 36px; height: 36px; font-size: 16px; margin-bottom: 10px; }
+    .next-step h3 { font-size: 16px; margin-bottom: 6px; }
+    .next-step p { font-size: 13px; }
+    .github-link { font-size: 13px; }
+
+    /* Navigation */
+    .nav { padding: 6px 12px; gap: 6px; }
+    .nav-dot { width: 8px; height: 8px; }
+    .nav-dot.active { width: 24px; }
+    .page-num { bottom: 20px; right: 20px; font-size: 12px; }
+    .key-hint { display: none; }
+  }
+
+  /* 极小屏 (手机竖屏) */
+  @media screen and (max-width: 420px) {
+    .slide { padding: 20px 14px; }
+    .cover h1 { font-size: 22px; }
+    .cover .subtitle { font-size: 13px; }
+    .soul-grid { grid-template-columns: 1fr; }
+    .achieve-grid { grid-template-columns: repeat(2, 1fr); }
+  }
 </style>
 </head>
 <body>
@@ -554,57 +651,22 @@
 <!-- ===== Slide 4: How It Works ===== -->
 <div class="slide how-slide" data-slide="4">
   <h2>实际运行<span>效果</span></h2>
-  <div class="flow-demo">
-    <div class="flow-msg">
-      <div class="flow-avatar" style="background:var(--gradient-5);">👤</div>
-      <div class="flow-content user-msg">
-        <div class="sender" style="color:#fee140;">Allen</div>
-        帮我做洛克手游的首发方案
+  <div style="flex:1; display:flex; align-items:center; justify-content:center;">
+    <a href="https://drive.weixin.qq.com/s?k=AJEAIQdfAAoZE4cN8q" target="_blank" 
+       style="display:block; width:90%; max-width:960px; border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.12); background:#0a0e14; position:relative; text-decoration:none; cursor:pointer; aspect-ratio:16/9;">
+      <!-- 深色背景占位 + 标题 -->
+      <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(135deg, #0f1923 0%, #1a1a2e 50%, #16213e 100%);">
+        <!-- 播放按钮 -->
+        <div style="width:88px; height:88px; border-radius:50%; background:rgba(255,255,255,0.12); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; border:2px solid rgba(255,255,255,0.2); transition:all 0.3s ease; margin-bottom:20px;"
+             onmouseover="this.style.background='rgba(255,255,255,0.22)'; this.style.transform='scale(1.08)'"
+             onmouseout="this.style.background='rgba(255,255,255,0.12)'; this.style.transform='scale(1)'">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="white">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </div>
+        <div style="color:rgba(255,255,255,0.7); font-size:16px; letter-spacing:1px;">点击播放演示视频</div>
       </div>
-    </div>
-    <div class="flow-msg">
-      <div class="flow-avatar" style="background:var(--gradient-1);">👑</div>
-      <div class="flow-content ceo-msg">
-        <div class="sender" style="color:#b39ddb;">CEO</div>
-        收到，正在协调三条线并行推进……<br>
-        → 已下发商务线：渠道资源锁定方案<br>
-        → 已下发运营线：运营活动策划<br>
-        → 已下发产研线：技术排期和风险评估
-      </div>
-    </div>
-    <div class="flow-msg">
-      <div class="flow-avatar" style="background:var(--gradient-2);">🤝</div>
-      <div class="flow-content agent-msg">
-        <div class="sender" style="color:#ef9a9a;">商务负责人</div>
-        华为应用市场：首发推荐位 + 开屏广告 3 天<br>
-        OPPO 软件商店：联运预注册 + 资源互换<br>
-        B站：UP主联动 + 信息流投放……
-      </div>
-    </div>
-    <div class="flow-msg">
-      <div class="flow-avatar" style="background:var(--gradient-3);">📊</div>
-      <div class="flow-content agent-msg">
-        <div class="sender" style="color:#80deea;">运营负责人</div>
-        预注册活动方案、首周留存运营策略、<br>
-        KOL 合作矩阵、首发活动排期……
-      </div>
-    </div>
-    <div class="flow-msg">
-      <div class="flow-avatar" style="background:var(--gradient-4);">🔧</div>
-      <div class="flow-content agent-msg">
-        <div class="sender" style="color:#a5d6a7;">产研负责人</div>
-        SDK 对接排期、数据归因方案、<br>
-        风险清单及缓解措施……
-      </div>
-    </div>
-    <div class="flow-msg">
-      <div class="flow-avatar" style="background:var(--gradient-1);">👑</div>
-      <div class="flow-content result-msg">
-        <div class="sender" style="color:#ffcc80;">CEO（汇总输出）</div>
-        三条线已全部完成，以下是整合后的<strong>洛克手游首发方案</strong>：<br>
-        一、渠道资源矩阵 | 二、运营活动时间轴 | 三、技术倒排计划 | 四、风险与应对
-      </div>
-    </div>
+    </a>
   </div>
 </div>
 

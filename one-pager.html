@@ -142,6 +142,40 @@
     color: #999;
   }
   .footer a { color: #1a73e8; text-decoration: none; }
+
+  /* ===== 移动端适配 ===== */
+  @media screen and (max-width: 600px) {
+    body { padding: 8px; }
+    .page { padding: 20px 16px; }
+
+    /* Header 堆叠 */
+    .header { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .header h1 { font-size: 20px; }
+    .header .meta { text-align: left; font-size: 12px; }
+
+    /* 问题/方案 双栏变单栏 */
+    .two-col { grid-template-columns: 1fr; gap: 12px; }
+
+    /* 架构图 横向变纵向 */
+    .arch-visual { flex-direction: column; gap: 8px; }
+    .arch-arrow { transform: rotate(90deg); font-size: 16px; }
+    .arch-subs { width: 100%; }
+    .arch-block { padding: 8px 12px; font-size: 12px; }
+
+    /* 数据 4列变2列 */
+    .stats { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .stat .num { font-size: 22px; }
+
+    /* 价值/计划 双栏变单栏 */
+    .value-list { grid-template-columns: 1fr; gap: 6px; }
+
+    /* Footer 堆叠 */
+    .footer { flex-direction: column; gap: 6px; }
+
+    .section-title { font-size: 13px; }
+    .box h3 { font-size: 14px; }
+    .box li { font-size: 12px; }
+  }
 </style>
 </head>
 <body>
@@ -160,19 +194,17 @@
     <div class="box problem-box">
       <h3>❌ 现状问题</h3>
       <ul>
-        <li>单一 AI 对话：上下文长了就丢信息</li>
-        <li>通用回答：缺乏业务专业深度</li>
-        <li>串行等待：跨线沟通效率低</li>
-        <li>无法并行：一次只能问一个问题</li>
+        <li>单一 AI 局限：回答通用，缺乏业务专业深度</li>
+        <li>重复性工作多：方案、调研、策划等大量消耗精力</li>
+        <li>人力有限事情多：需求量大，很多工作排不过来</li>
       </ul>
     </div>
     <div class="box solution-box">
-      <h3>✅ 解决方案</h3>
+      <h3>✅ 解决方案：4 人 AI 团队</h3>
       <ul>
-        <li>4 个专业 AI Agent，各司其职</li>
-        <li>SOUL 定义灵魂，回答专业精准</li>
-        <li>CEO 统筹，三条线并行执行</li>
-        <li>一句话下指令，自动协作汇总</li>
+        <li>4 个专业 Agent 各司其职，SOUL 定义专业边界</li>
+        <li>一句话下指令，自动生成完整方案</li>
+        <li>CEO 统筹三条线并行执行，效率翻倍</li>
       </ul>
     </div>
   </div>
