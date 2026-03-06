@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo 演示指南 — 操作步骤与预期效果</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: #0f1923;
+    color: #e8eaed;
+    padding: 40px 60px;
+    max-width: 960px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+  h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+  .subtitle { color: #9aa0a6; font-size: 16px; margin-bottom: 40px; }
+
+  .demo-block {
+    margin-bottom: 36px;
+    background: #1a2332;
+    border-radius: 14px;
+    padding: 28px 32px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .demo-block h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .demo-block h2 .badge {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .badge-required { background: rgba(245,87,108,0.15); color: #f5576c; }
+  .badge-optional { background: rgba(255,204,128,0.15); color: #ffcc80; }
+
+  .demo-step {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 0 14px;
+    margin-bottom: 18px;
+  }
+
+  .step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(79,172,254,0.15);
+    color: #4facfe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  .step-content h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .step-content p { font-size: 14px; color: #9aa0a6; }
+
+  .cmd-box {
+    background: #111820;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 8px 0;
+    font-family: 'Menlo', 'Monaco', monospace;
+    font-size: 14px;
+    color: #43e97b;
+    border: 1px solid rgba(255,255,255,0.05);
+    overflow-x: auto;
+  }
+
+  .msg-box {
+    background: rgba(26,115,232,0.08);
+    border: 1px solid rgba(26,115,232,0.2);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 8px 0;
+    font-size: 15px;
+  }
+  .msg-box .label { font-size: 12px; color: #4facfe; font-weight: 700; margin-bottom: 4px; }
+
+  .expect-box {
+    background: rgba(67,233,123,0.06);
+    border: 1px solid rgba(67,233,123,0.15);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 8px 0;
+    font-size: 14px;
+  }
+  .expect-box .label { font-size: 12px; color: #43e97b; font-weight: 700; margin-bottom: 4px; }
+
+  .warn-box {
+    background: rgba(255,109,0,0.08);
+    border: 1px solid rgba(255,109,0,0.2);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 8px 0;
+    font-size: 14px;
+  }
+  .warn-box .label { font-size: 12px; color: #ff6d00; font-weight: 700; margin-bottom: 4px; }
+
+  .screenshot-placeholder {
+    background: rgba(255,255,255,0.03);
+    border: 2px dashed rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin: 10px 0;
+  }
+
+  .backup-section {
+    background: rgba(245,87,108,0.06);
+    border: 1px solid rgba(245,87,108,0.2);
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-top: 30px;
+  }
+  .backup-section h2 { color: #f5576c; font-size: 20px; margin-bottom: 14px; }
+  .backup-section p { font-size: 14px; color: #9aa0a6; margin-bottom: 8px; }
+
+  .recommended-msgs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .rec-msg {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+  .rec-msg .tag { font-size: 11px; color: #4facfe; font-weight: 700; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<h1>🎯 Demo 演示指南</h1>
+<div class="subtitle">包含操作步骤、发送的消息、预期结果和备用方案</div>
+
+<!-- Demo 1: 核心演示 -->
+<div class="demo-block">
+  <h2>Demo 1：CEO 跨线协作 <span class="badge badge-required">必演</span></h2>
+  
+  <div class="demo-step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h3>打开 CEO Bot 对话</h3>
+      <p>手机打开聊天软件，找到你的 CEO Bot</p>
+    </div>
+  </div>
+
+  <div class="demo-step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h3>发送跨线任务</h3>
+      <div class="msg-box">
+        <div class="label">发送给 CEO Bot ↓</div>
+        帮我分析一下 Q2 华为渠道的合作策略，从商务、运营、产研三个角度给建议
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h3>等待 CEO 响应（30-60 秒）</h3>
+      <div class="expect-box">
+        <div class="label">预期 CEO 回复 ↓</div>
+        CEO 会先回复"收到，正在协调三条线..."<br>
+        然后分别 spawn 商务、运营、产研三个 subagent<br>
+        最后整合输出一份完整的华为渠道 Q2 策略方案
+      </div>
+      <div class="warn-box">
+        <div class="label">如果响应慢 ↓</div>
+        切到电脑，打开 Dashboard（http://127.0.0.1:18789），展示 session 列表——可以看到 CEO 正在并行调用其他 Agent。边等边讲解："大家看，这里 CEO 同时派发了三个子任务……"
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <h3>展示汇总结果</h3>
+      <p>CEO 返回的结果应该包含商务、运营、产研三个部分的建议，结构清晰。</p>
+      <p>重点指出：<strong>"我只发了一条消息，AI 团队就自动协作完成了跨线分析。"</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- Demo 2 -->
+<div class="demo-block">
+  <h2>Demo 2：直接与单个 Agent 对话 <span class="badge badge-optional">可选</span></h2>
+  
+  <div class="demo-step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h3>切到商务负责人 Bot</h3>
+      <div class="msg-box">
+        <div class="label">发送给商务负责人 Bot ↓</div>
+        华为渠道的 CPS 联运合作一般怎么谈？关键资源位有哪些？
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h3>展示专业回答</h3>
+      <div class="expect-box">
+        <div class="label">预期效果 ↓</div>
+        商务负责人会用渠道商务的专业视角回答，包含 CPS 分成策略、资源位类型、谈判要点等。<br>
+        对比 CEO 的全局视角——这里更聚焦商务细节。
+      </div>
+      <p>讲解重点：<strong>"每个 Agent 有自己的专业领域，回答深度不一样。"</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- Demo 3 -->
+<div class="demo-block">
+  <h2>Demo 3：Dashboard 展示 <span class="badge badge-optional">可选</span></h2>
+  
+  <div class="demo-step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h3>打开浏览器 Dashboard</h3>
+      <div class="cmd-box">http://127.0.0.1:18789</div>
+      <p>输入 Gateway Token 登录</p>
+    </div>
+  </div>
+
+  <div class="demo-step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h3>展示关键页面</h3>
+      <p>• <strong>Agents 列表</strong>：4 个 Agent 全部在线</p>
+      <p>• <strong>Sessions 列表</strong>：最近的对话记录，能看到 CEO spawn 的子任务</p>
+      <p>• <strong>直接在 Dashboard 对话</strong>：选中某个 Agent，直接在网页端发消息</p>
+    </div>
+  </div>
+</div>
+
+<!-- 推荐发送的消息 -->
+<div class="demo-block">
+  <h2>📝 推荐演示消息（按场景选择）</h2>
+  <div class="recommended-msgs">
+    <div class="rec-msg">
+      <div class="tag">跨线协作（推荐首选）</div>
+      帮我分析一下 Q2 华为渠道的合作策略，从商务、运营、产研三个角度给建议
+    </div>
+    <div class="rec-msg">
+      <div class="tag">方案制定</div>
+      帮我做一个新游戏的渠道首发方案，包含资源锁定、运营活动和技术支撑
+    </div>
+    <div class="rec-msg">
+      <div class="tag">简单问答</div>
+      目前硬核联盟和内容渠道的资源分配策略应该怎么做？
+    </div>
+    <div class="rec-msg">
+      <div class="tag">单线深入</div>
+      （发给商务）分析一下抖音渠道跟传统应用商店的合作模式有什么区别？
+    </div>
+  </div>
+</div>
+
+<!-- 备用方案 -->
+<div class="backup-section">
+  <h2>🚨 备用方案（如果现场翻车）</h2>
+  <p><strong>情况 1：AI 响应太慢（超过 2 分钟没回复）</strong></p>
+  <p>→ 切到 PPT 第 4 页（How It Works），用图示讲解流程："正常情况下是这样的效果，我之前测试过……"</p>
+  <p>→ 同时看 Dashboard 的 session 列表，展示 Agent 正在工作中</p>
+  <br>
+  <p><strong>情况 2：网关挂了</strong></p>
+  <p>→ 终端执行 <code>openclaw gateway restart</code>，等 10 秒重启</p>
+  <p>→ 如果重启也失败，直接用 PPT + 口述 + 之前的截图过完演示</p>
+  <br>
+  <p><strong>情况 3：回答质量不好（AI 编了数据）</strong></p>
+  <p>→ 正面解释："这正好说明了为什么我们需要知识边界声明。当前 SOUL 已经做了防护，它会标注'待确认'。如果真出现编造，我们就去迭代 SOUL。"</p>
+  <br>
+  <p><strong>演示前最后一步</strong>：提前在 CEO Bot 发一条消息测试响应是否正常。确认正常后再开始正式演示。</p>
+</div>
+
+</body>
+</html>

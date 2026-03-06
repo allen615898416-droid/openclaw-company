@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>演示脚本 — OpenClaw 多 Agent 协作</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: #0f1923;
+    color: #e8eaed;
+    padding: 40px 60px;
+    max-width: 900px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+  h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+  .subtitle { color: #9aa0a6; font-size: 16px; margin-bottom: 40px; }
+  .phase {
+    margin-bottom: 36px;
+    background: #1a2332;
+    border-radius: 14px;
+    padding: 28px 32px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .phase-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 18px;
+    color: #000;
+    flex-shrink: 0;
+  }
+  .phase h2 { font-size: 22px; font-weight: 700; }
+  .phase .time { color: #9aa0a6; font-size: 14px; margin-left: auto; background: rgba(255,255,255,0.05); padding: 4px 12px; border-radius: 20px; }
+  .step { margin-bottom: 14px; padding-left: 16px; border-left: 2px solid rgba(255,255,255,0.08); }
+  .step .action { font-weight: 700; color: #4facfe; font-size: 15px; }
+  .step .speak { color: #e8eaed; font-size: 15px; margin-top: 4px; }
+  .step .speak::before { content: '🗣️ '; }
+  .step .do { color: #43e97b; font-size: 14px; margin-top: 4px; }
+  .step .do::before { content: '👉 '; }
+  .step .tip { color: #ffcc80; font-size: 13px; margin-top: 4px; font-style: italic; }
+  .step .tip::before { content: '💡 '; }
+  .divider { height: 1px; background: rgba(255,255,255,0.06); margin: 20px 0; }
+  .warning {
+    background: rgba(245,87,108,0.1);
+    border: 1px solid rgba(245,87,108,0.3);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 30px;
+    font-size: 15px;
+  }
+  .warning h3 { color: #f5576c; margin-bottom: 8px; }
+  .checklist {
+    background: rgba(67,233,123,0.06);
+    border: 1px solid rgba(67,233,123,0.2);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 20px;
+  }
+  .checklist h3 { color: #43e97b; margin-bottom: 10px; }
+  .checklist li { margin-bottom: 6px; list-style: none; }
+  .checklist li::before { content: '☐ '; }
+  @media print {
+    body { background: white; color: #222; padding: 20px; }
+    .phase { border: 1px solid #ddd; }
+    .step .action { color: #1a73e8; }
+    .step .do { color: #0d7a3f; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🎬 现场演示脚本</h1>
+<div class="subtitle">预计总时长：15-20 分钟 · 演示 + 讲解 + Q&A</div>
+
+<!-- Phase 1 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num">1</div>
+    <h2>开场：为什么需要多 Agent</h2>
+    <span class="time">2 分钟</span>
+  </div>
+  <div class="step">
+    <div class="action">打开 PPT 第 1-2 页</div>
+    <div class="speak">大家好，今天分享一下我用 OpenClaw 搭建的多 Agent 协作方案。先说下背景——我们平时用 ChatGPT 或 Kimi 都是单一对话框，上下文一长就容易丢信息，而且没有专业化分工。</div>
+    <div class="speak">我的想法是：像管理真实团队一样管理 AI。让不同的 AI 扮演不同的角色，各司其职。</div>
+  </div>
+</div>
+
+<!-- Phase 2 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num">2</div>
+    <h2>架构介绍：4 人 AI 团队</h2>
+    <span class="time">3 分钟</span>
+  </div>
+  <div class="step">
+    <div class="action">PPT 第 3 页（架构图）</div>
+    <div class="speak">整个团队由 4 个 AI Agent 组成：CEO 负责统筹，下面是商务、运营、产研三条线。我只需要跟 CEO 说话，它会自动拆解任务、分派给三条线、最后汇总结果返回。</div>
+  </div>
+  <div class="step">
+    <div class="action">PPT 第 5 页（SOUL 灵魂）</div>
+    <div class="speak">关键在于每个 Agent 都有自己的"灵魂定义"——SOUL 文件。它决定了 Agent 是谁、擅长什么、跟谁协作。SOUL 越具体，回答越专业。</div>
+    <div class="tip">如果老板问"跟直接用 ChatGPT 有什么区别"，重点强调：专业化分工 + 并行处理 + 知识边界防幻觉</div>
+  </div>
+</div>
+
+<!-- Phase 3 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num">3</div>
+    <h2>现场演示：给 CEO 下任务</h2>
+    <span class="time">5-8 分钟</span>
+  </div>
+  <div class="step">
+    <div class="action">打开手机 → CEO Bot 对话</div>
+    <div class="speak">现在我直接演示。我打开 CEO Bot 的对话窗口，给它发一条消息。</div>
+  </div>
+  <div class="step">
+    <div class="do">发送消息："帮我分析一下 Q2 华为渠道的合作策略，从商务、运营、产研三个角度给建议"</div>
+    <div class="speak">这是一个跨线需求。CEO 收到后会拆解成三个子任务，分别派给三条线的负责人。</div>
+  </div>
+  <div class="step">
+    <div class="action">等待 CEO 回复（约 30-60 秒）</div>
+    <div class="speak">大家注意看，CEO 先告诉我它在协调三条线，然后三条线并行执行。传统方式你得分别找三个人问，再自己汇总。这里 CEO 会自动整合三方结果。</div>
+    <div class="tip">如果等待时间较长，可以切到 Dashboard（http://127.0.0.1:18789）展示 session 列表，让老板看到多个 Agent 在并行工作</div>
+  </div>
+  <div class="step">
+    <div class="action">展示 CEO 汇总结果</div>
+    <div class="speak">看，CEO 把商务、运营、产研三条线的结果整合成了一份完整的方案，结构清晰，各线职责明确。这就是多 Agent 协作的价值——你只说一句话，团队就跑起来了。</div>
+  </div>
+  <div class="divider"></div>
+  <div class="step">
+    <div class="action">（可选）直接跟商务负责人对话</div>
+    <div class="do">切到商务负责人 Bot，发送："华为渠道最近的合作政策有什么变化？CPS 分成比例一般怎么谈？"</div>
+    <div class="speak">也可以直接找某个负责人聊特定领域的问题，它会用商务的专业视角回答。</div>
+  </div>
+</div>
+
+<!-- Phase 4 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num">4</div>
+    <h2>技术亮点 & 防幻觉设计</h2>
+    <span class="time">2 分钟</span>
+  </div>
+  <div class="step">
+    <div class="action">PPT 第 6 页（设计理念）</div>
+    <div class="speak">几个关键设计：一是每个 SOUL 都声明了知识边界，遇到不知道的会标注"待确认"，不会乱编数据。二是 CEO 有汇总原则，收齐三条线再输出，不会零散转发。三是一键部署，同事 10 分钟就能跑起来。</div>
+  </div>
+</div>
+
+<!-- Phase 5 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num">5</div>
+    <h2>成果展示 & 可扩展性</h2>
+    <span class="time">2 分钟</span>
+  </div>
+  <div class="step">
+    <div class="action">PPT 第 7-8 页</div>
+    <div class="speak">目前 4 个 Agent 已经稳定运行。架构设计上支持 3 级扩展，人数按业务需求灵活配置。而且这套配置可以复用到电商、内容创业、技术团队等不同场景——只需要改 SOUL 文件。</div>
+  </div>
+  <div class="step">
+    <div class="action">PPT 第 9 页（下一步）</div>
+    <div class="speak">下一步计划：推广给组内同事使用，接入内部知识库让 Agent 回答更精准，根据反馈持续迭代 SOUL。项目已经开源到 GitHub。</div>
+  </div>
+</div>
+
+<!-- Phase 6 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num">6</div>
+    <h2>Q&A 预案</h2>
+    <span class="time">3-5 分钟</span>
+  </div>
+  <div class="step">
+    <div class="action">Q: 这跟直接用 ChatGPT 有啥区别？</div>
+    <div class="speak">三个核心区别：第一，专业化分工，每个 Agent 只做擅长的事；第二，并行处理，三条线同时跑；第三，知识边界，不会乱编数据。</div>
+  </div>
+  <div class="step">
+    <div class="action">Q: API 费用贵吗？</div>
+    <div class="speak">4 人团队日常使用大约每天 5-15 块，用的是 Moonshot Kimi 模型。可以根据使用频率调整。</div>
+  </div>
+  <div class="step">
+    <div class="action">Q: 安全性怎么样？敏感信息会不会泄露？</div>
+    <div class="speak">所有数据都在本地跑，不经过第三方服务器。对外开源的配置也做了脱敏处理，API Key 等全部替换成占位符。</div>
+  </div>
+  <div class="step">
+    <div class="action">Q: 其他业务线能用吗？</div>
+    <div class="speak">可以，只需要改 SOUL 文件就行。架构是通用的，换个行业就换一套角色定义。</div>
+  </div>
+  <div class="step">
+    <div class="action">Q: 会不会影响正常工作？</div>
+    <div class="speak">不会，它是辅助工具。帮你快速出方案初稿、做结构化分析，最终决策还是人来做。</div>
+  </div>
+</div>
+
+<div class="warning">
+  <h3>⚠️ 演示注意事项</h3>
+  <p>• 演示前确保网关已启动：<code>openclaw gateway status</code></p>
+  <p>• 确保手机有网络，聊天软件能正常收发消息</p>
+  <p>• 准备好备用方案：如果现场 AI 响应慢，可以展示之前的对话截图</p>
+  <p>• 不要发过于复杂的任务——演示时选简单清晰的问题，确保几十秒内能出结果</p>
+  <p>• Dashboard 地址：<code>http://127.0.0.1:18789</code>（备用展示入口）</p>
+</div>
+
+<div class="checklist">
+  <h3>✅ 演示前检查清单</h3>
+  <ul>
+    <li>OpenClaw 网关运行中</li>
+    <li>4 个 Bot 在线</li>
+    <li>手机聊天软件登录正常</li>
+    <li>电脑浏览器打开 PPT（presentation.html）</li>
+    <li>Dashboard 可访问</li>
+    <li>投屏/屏幕共享正常</li>
+    <li>准备好手机投屏（演示 Bot 对话）</li>
+  </ul>
+</div>
+
+</body>
+</html>

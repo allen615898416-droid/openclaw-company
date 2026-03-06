@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw 多 Agent 协作方案 — 向老板演示</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #1a73e8;
+    --primary-dark: #0d47a1;
+    --accent: #ff6d00;
+    --bg-dark: #0f1923;
+    --bg-card: #1a2332;
+    --text-light: #e8eaed;
+    --text-muted: #9aa0a6;
+    --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    --gradient-5: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  }
+
+  body {
+    font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-light);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .slide {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    padding: 60px 80px;
+    position: absolute;
+    top: 0; left: 0;
+    animation: fadeIn 0.5s ease;
+  }
+
+  .slide.active { display: flex; flex-direction: column; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ========== Slide 1: Cover ========== */
+  .cover {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: radial-gradient(ellipse at 30% 50%, rgba(26,115,232,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 50%, rgba(118,75,162,0.1) 0%, transparent 60%),
+                var(--bg-dark);
+  }
+
+  .cover .logo { font-size: 80px; margin-bottom: 20px; }
+  .cover h1 { font-size: 56px; font-weight: 900; margin-bottom: 16px; letter-spacing: -1px; }
+  .cover h1 span { background: var(--gradient-3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .cover .subtitle { font-size: 26px; color: var(--text-muted); font-weight: 300; margin-bottom: 40px; }
+  .cover .meta { font-size: 18px; color: var(--text-muted); }
+  .cover .meta strong { color: var(--text-light); }
+
+  /* ========== Slide 2: Pain Points ========== */
+  .pain-slide { background: var(--bg-dark); }
+  .pain-slide h2 { font-size: 42px; font-weight: 700; margin-bottom: 50px; }
+  .pain-slide h2 span { color: #f5576c; }
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    flex: 1;
+  }
+  .pain-card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 36px 30px;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: transform 0.3s;
+  }
+  .pain-card:hover { transform: translateY(-4px); }
+  .pain-card .icon { font-size: 48px; margin-bottom: 16px; }
+  .pain-card h3 { font-size: 22px; font-weight: 700; margin-bottom: 12px; color: #f5576c; }
+  .pain-card p { font-size: 17px; line-height: 1.7; color: var(--text-muted); }
+
+  /* ========== Slide 3: Solution ========== */
+  .solution-slide { background: var(--bg-dark); }
+  .solution-slide h2 { font-size: 42px; font-weight: 700; margin-bottom: 20px; }
+  .solution-slide h2 span { background: var(--gradient-4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .solution-slide .tagline { font-size: 20px; color: var(--text-muted); margin-bottom: 40px; }
+
+  .architecture {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 0;
+  }
+
+  .arch-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+  }
+
+  .arch-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    margin-bottom: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+
+  .arch-node .name { font-size: 18px; font-weight: 700; }
+  .arch-node .role { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+
+  .arch-you .arch-avatar { background: var(--gradient-5); }
+  .arch-ceo .arch-avatar { background: var(--gradient-1); }
+  .arch-biz .arch-avatar { background: var(--gradient-2); }
+  .arch-ops .arch-avatar { background: var(--gradient-3); }
+  .arch-tech .arch-avatar { background: var(--gradient-4); }
+
+  .arch-arrow {
+    font-size: 32px;
+    color: var(--text-muted);
+    margin: 0 20px;
+    align-self: center;
+  }
+
+  .arch-branch {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .arch-connector {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .arch-line {
+    width: 60px;
+    height: 2px;
+    background: rgba(255,255,255,0.15);
+    position: relative;
+  }
+  .arch-line::after {
+    content: '▸';
+    position: absolute;
+    right: -8px;
+    top: -10px;
+    color: rgba(255,255,255,0.3);
+    font-size: 16px;
+  }
+
+  /* ========== Slide 4: How It Works ========== */
+  .how-slide { background: var(--bg-dark); }
+  .how-slide h2 { font-size: 42px; font-weight: 700; margin-bottom: 40px; }
+  .how-slide h2 span { background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+  .flow-demo {
+    background: #111820;
+    border-radius: 16px;
+    padding: 40px;
+    border: 1px solid rgba(255,255,255,0.06);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+  }
+
+  .flow-msg {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .flow-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .flow-content {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 14px 18px;
+    max-width: 75%;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .flow-content .sender { font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+  .flow-content.user-msg { background: rgba(26,115,232,0.15); border: 1px solid rgba(26,115,232,0.3); }
+  .flow-content.ceo-msg { background: rgba(118,75,162,0.12); border: 1px solid rgba(118,75,162,0.25); }
+  .flow-content.agent-msg { background: rgba(67,233,123,0.08); border: 1px solid rgba(67,233,123,0.2); }
+  .flow-content.result-msg { background: rgba(255,109,0,0.1); border: 1px solid rgba(255,109,0,0.25); }
+
+  /* ========== Slide 5: Agent SOUL ========== */
+  .soul-slide { background: var(--bg-dark); }
+  .soul-slide h2 { font-size: 42px; font-weight: 700; margin-bottom: 40px; }
+  .soul-slide h2 span { background: var(--gradient-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+  .soul-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    flex: 1;
+  }
+
+  .soul-card {
+    border-radius: 16px;
+    padding: 28px 24px;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: var(--bg-card);
+    transition: transform 0.3s;
+  }
+  .soul-card:hover { transform: translateY(-4px); }
+
+  .soul-card .emoji { font-size: 40px; }
+  .soul-card h3 { font-size: 20px; font-weight: 700; }
+  .soul-card .desc { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+  .soul-card .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+  .soul-card .tag {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.06);
+    color: var(--text-muted);
+  }
+
+  .soul-card:nth-child(1) { border-top: 3px solid #764ba2; }
+  .soul-card:nth-child(2) { border-top: 3px solid #f5576c; }
+  .soul-card:nth-child(3) { border-top: 3px solid #4facfe; }
+  .soul-card:nth-child(4) { border-top: 3px solid #43e97b; }
+
+  /* ========== Slide 6: Key Design Principles ========== */
+  .design-slide { background: var(--bg-dark); }
+  .design-slide h2 { font-size: 42px; font-weight: 700; margin-bottom: 40px; }
+  .design-slide h2 span { background: var(--gradient-5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+  .design-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    flex: 1;
+  }
+
+  .design-card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 30px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .design-card .num {
+    font-size: 48px;
+    font-weight: 900;
+    background: var(--gradient-3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+
+  .design-card h3 { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+  .design-card p { font-size: 16px; color: var(--text-muted); line-height: 1.7; }
+
+  /* ========== Slide 7: Achievements ========== */
+  .achieve-slide { background: var(--bg-dark); }
+  .achieve-slide h2 { font-size: 42px; font-weight: 700; margin-bottom: 40px; }
+  .achieve-slide h2 span { background: var(--gradient-4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+  .achieve-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+
+  .achieve-card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 30px 24px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .achieve-card .number {
+    font-size: 52px;
+    font-weight: 900;
+    background: var(--gradient-3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.2;
+  }
+  .achieve-card .unit { font-size: 20px; font-weight: 700; margin-top: 4px; }
+  .achieve-card .label { font-size: 15px; color: var(--text-muted); margin-top: 8px; }
+
+  .achieve-list {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 30px 36px;
+    border: 1px solid rgba(255,255,255,0.06);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .achieve-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 17px;
+  }
+
+  .achieve-item .check { color: #43e97b; font-size: 20px; }
+
+  /* ========== Slide 8: Scalability ========== */
+  .scale-slide { background: var(--bg-dark); }
+  .scale-slide h2 { font-size: 42px; font-weight: 700; margin-bottom: 40px; }
+  .scale-slide h2 span { background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+  .scale-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    flex: 1;
+  }
+
+  .scale-box {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 36px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .scale-box h3 { font-size: 24px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+
+  .scale-tree { font-family: monospace; font-size: 16px; line-height: 2; color: var(--text-muted); }
+  .scale-tree .highlight { color: var(--text-light); font-weight: 700; }
+
+  .scale-scenarios { display: flex; flex-direction: column; gap: 14px; }
+  .scale-scenario {
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    padding: 16px 20px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .scale-scenario h4 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .scale-scenario p { font-size: 14px; color: var(--text-muted); }
+
+  /* ========== Slide 9: Next Steps ========== */
+  .next-slide {
+    background: radial-gradient(ellipse at 50% 50%, rgba(26,115,232,0.12) 0%, transparent 60%), var(--bg-dark);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .next-slide h2 { font-size: 48px; font-weight: 900; margin-bottom: 50px; }
+  .next-slide h2 span { background: var(--gradient-3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+  .next-steps {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 50px;
+  }
+
+  .next-step {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 36px 30px;
+    width: 260px;
+    border: 1px solid rgba(255,255,255,0.06);
+    text-align: center;
+  }
+
+  .next-step .step-num {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--gradient-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 900;
+    margin: 0 auto 16px;
+    color: #000;
+  }
+
+  .next-step h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+  .next-step p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+
+  .github-link {
+    font-size: 18px;
+    color: var(--text-muted);
+    margin-top: 20px;
+  }
+  .github-link a {
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  /* ========== Navigation ========== */
+  .nav {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 100;
+    background: rgba(26,35,50,0.9);
+    padding: 10px 20px;
+    border-radius: 40px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .nav-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .nav-dot.active {
+    background: var(--primary);
+    width: 36px;
+    border-radius: 6px;
+  }
+
+  .page-num {
+    position: fixed;
+    bottom: 30px;
+    right: 40px;
+    font-size: 14px;
+    color: var(--text-muted);
+    z-index: 100;
+  }
+
+  .key-hint {
+    position: fixed;
+    bottom: 30px;
+    left: 40px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.2);
+    z-index: 100;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== Slide 1: Cover ===== -->
+<div class="slide cover active" data-slide="1">
+  <div class="logo">🦞</div>
+  <h1><span>OpenClaw 多 Agent 协作方案</span></h1>
+  <div class="subtitle">"一人公司 + N 个数字员工" — 用 AI 团队替代重复性人力</div>
+  <div class="meta">
+    <strong>Allen</strong> · 腾讯游戏渠道业务部 · 2026.03
+  </div>
+</div>
+
+<!-- ===== Slide 2: Pain Points ===== -->
+<div class="slide pain-slide" data-slide="2">
+  <h2>当前面临的<span>问题</span></h2>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="icon">🧠</div>
+      <h3>单一 AI 的局限</h3>
+      <p>把所有需求丢给一个 ChatGPT 对话框：上下文越来越长，AI 容易"忘记"之前的内容，回答停留在通用层面</p>
+    </div>
+    <div class="pain-card">
+      <div class="icon">🔄</div>
+      <h3>重复性工作多</h3>
+      <p>方案撰写、数据分析、渠道调研、活动策划……大量可结构化的工作消耗团队精力</p>
+    </div>
+    <div class="pain-card">
+      <div class="icon">⏳</div>
+      <h3>人力有限，事情太多</h3>
+      <p>团队人手有限，但方案、调研、分析、策划的需求量大，很多工作排不过来</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Slide 3: Solution Architecture ===== -->
+<div class="slide solution-slide" data-slide="3">
+  <h2>解决方案：<span>4 人 AI 团队</span></h2>
+  <div class="tagline">像管理真实团队一样管理 AI — 你只需跟 CEO 说一句话</div>
+  <div class="architecture">
+    <div class="arch-node arch-you">
+      <div class="arch-avatar">👤</div>
+      <div class="name">你（Allen）</div>
+      <div class="role">下指令</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node arch-ceo">
+      <div class="arch-avatar">👑</div>
+      <div class="name">CEO</div>
+      <div class="role">理解意图 · 拆解任务 · 汇总结果</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-branch">
+      <div class="arch-connector">
+        <div class="arch-line"></div>
+        <div class="arch-node arch-biz">
+          <div class="arch-avatar">🤝</div>
+          <div class="name">商务负责人</div>
+          <div class="role">面向渠道，拿资源</div>
+        </div>
+      </div>
+      <div class="arch-connector">
+        <div class="arch-line"></div>
+        <div class="arch-node arch-ops">
+          <div class="arch-avatar">📊</div>
+          <div class="name">运营负责人</div>
+          <div class="role">面向游戏，做增长</div>
+        </div>
+      </div>
+      <div class="arch-connector">
+        <div class="arch-line"></div>
+        <div class="arch-node arch-tech">
+          <div class="arch-avatar">🔧</div>
+          <div class="name">产研负责人</div>
+          <div class="role">赋能前两条线</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Slide 4: How It Works ===== -->
+<div class="slide how-slide" data-slide="4">
+  <h2>实际运行<span>效果</span></h2>
+  <div class="flow-demo">
+    <div class="flow-msg">
+      <div class="flow-avatar" style="background:var(--gradient-5);">👤</div>
+      <div class="flow-content user-msg">
+        <div class="sender" style="color:#fee140;">Allen</div>
+        帮我做洛克手游的首发方案
+      </div>
+    </div>
+    <div class="flow-msg">
+      <div class="flow-avatar" style="background:var(--gradient-1);">👑</div>
+      <div class="flow-content ceo-msg">
+        <div class="sender" style="color:#b39ddb;">CEO</div>
+        收到，正在协调三条线并行推进……<br>
+        → 已下发商务线：渠道资源锁定方案<br>
+        → 已下发运营线：运营活动策划<br>
+        → 已下发产研线：技术排期和风险评估
+      </div>
+    </div>
+    <div class="flow-msg">
+      <div class="flow-avatar" style="background:var(--gradient-2);">🤝</div>
+      <div class="flow-content agent-msg">
+        <div class="sender" style="color:#ef9a9a;">商务负责人</div>
+        华为应用市场：首发推荐位 + 开屏广告 3 天<br>
+        OPPO 软件商店：联运预注册 + 资源互换<br>
+        B站：UP主联动 + 信息流投放……
+      </div>
+    </div>
+    <div class="flow-msg">
+      <div class="flow-avatar" style="background:var(--gradient-3);">📊</div>
+      <div class="flow-content agent-msg">
+        <div class="sender" style="color:#80deea;">运营负责人</div>
+        预注册活动方案、首周留存运营策略、<br>
+        KOL 合作矩阵、首发活动排期……
+      </div>
+    </div>
+    <div class="flow-msg">
+      <div class="flow-avatar" style="background:var(--gradient-4);">🔧</div>
+      <div class="flow-content agent-msg">
+        <div class="sender" style="color:#a5d6a7;">产研负责人</div>
+        SDK 对接排期、数据归因方案、<br>
+        风险清单及缓解措施……
+      </div>
+    </div>
+    <div class="flow-msg">
+      <div class="flow-avatar" style="background:var(--gradient-1);">👑</div>
+      <div class="flow-content result-msg">
+        <div class="sender" style="color:#ffcc80;">CEO（汇总输出）</div>
+        三条线已全部完成，以下是整合后的<strong>洛克手游首发方案</strong>：<br>
+        一、渠道资源矩阵 | 二、运营活动时间轴 | 三、技术倒排计划 | 四、风险与应对
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Slide 5: Agent SOUL ===== -->
+<div class="slide soul-slide" data-slide="5">
+  <h2>每个 Agent 都有独立的<span>灵魂</span></h2>
+  <div class="soul-grid">
+    <div class="soul-card">
+      <div class="emoji">👑</div>
+      <h3>CEO</h3>
+      <div class="desc">业务总负责人。理解全局，拆解任务到三条线，等全部完成后整合汇总，体现统筹价值。</div>
+      <div class="tags">
+        <span class="tag">战略规划</span>
+        <span class="tag">团队协调</span>
+        <span class="tag">关键决策</span>
+        <span class="tag">风险把控</span>
+      </div>
+    </div>
+    <div class="soul-card">
+      <div class="emoji">🤝</div>
+      <h3>商务负责人</h3>
+      <div class="desc">面向渠道，拿资源。精通硬核联盟、内容渠道的商务对接，为游戏争取最优资源位和合作条件。</div>
+      <div class="tags">
+        <span class="tag">渠道关系</span>
+        <span class="tag">CPS 分成</span>
+        <span class="tag">资源谈判</span>
+      </div>
+    </div>
+    <div class="soul-card">
+      <div class="emoji">📊</div>
+      <h3>运营负责人</h3>
+      <div class="desc">面向游戏，做增长。利用渠道资源帮助游戏实现用户增长和收入提升，策划运营活动。</div>
+      <div class="tags">
+        <span class="tag">用户增长</span>
+        <span class="tag">活动策划</span>
+        <span class="tag">数据分析</span>
+      </div>
+    </div>
+    <div class="soul-card">
+      <div class="emoji">🔧</div>
+      <h3>产研负责人</h3>
+      <div class="desc">赋能商务和运营。负责策略研究、工程系统建设、项目管理、数据分析，提升团队整体效率。</div>
+      <div class="tags">
+        <span class="tag">策略分析</span>
+        <span class="tag">工程建设</span>
+        <span class="tag">项目管理</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Slide 6: Key Design ===== -->
+<div class="slide design-slide" data-slide="6">
+  <h2>核心<span>设计理念</span></h2>
+  <div class="design-grid">
+    <div class="design-card">
+      <div class="num">01</div>
+      <h3>专业化分工，不是万能助手</h3>
+      <p>每个 Agent 有独立的 SOUL 定义，明确职责边界和专业领域。商务只管渠道，运营只管增长，互不越界。</p>
+    </div>
+    <div class="design-card">
+      <div class="num">02</div>
+      <h3>CEO 统筹，并行处理</h3>
+      <p>CEO 理解意图后，同时派发任务给三条线并行执行。传统串行等待变成并行协作，效率提升数倍。</p>
+    </div>
+    <div class="design-card">
+      <div class="num">03</div>
+      <h3>知识边界声明，防止幻觉</h3>
+      <p>每个 SOUL 都明确声明"不编造数据"。不确定的信息标注"待确认"，杜绝 AI 编造具体数字和人名。</p>
+    </div>
+    <div class="design-card">
+      <div class="num">04</div>
+      <h3>开箱即用，10 分钟部署</h3>
+      <p>已整理成开源项目，一键安装脚本 + 完整配置模板 + 使用教程。同事下载后只需填入 API Key 即可运行。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Slide 7: Achievements ===== -->
+<div class="slide achieve-slide" data-slide="7">
+  <h2>已经做到的<span>成果</span></h2>
+  <div class="achieve-grid">
+    <div class="achieve-card">
+      <div class="number">4</div>
+      <div class="unit">个 Agent</div>
+      <div class="label">已配置并稳定运行</div>
+    </div>
+    <div class="achieve-card">
+      <div class="number">1</div>
+      <div class="unit">条指令</div>
+      <div class="label">即可启动跨线协作</div>
+    </div>
+    <div class="achieve-card">
+      <div class="number">10</div>
+      <div class="unit">分钟</div>
+      <div class="label">新同事从零部署</div>
+    </div>
+    <div class="achieve-card">
+      <div class="number">24/7</div>
+      <div class="unit">全天候</div>
+      <div class="label">AI 团队不下班</div>
+    </div>
+  </div>
+  <div class="achieve-list">
+    <div class="achieve-item"><span class="check">✓</span> 完整的 SOUL 定义（4 个角色性格调教）</div>
+    <div class="achieve-item"><span class="check">✓</span> 支持企业微信/Telegram 等多平台接入</div>
+    <div class="achieve-item"><span class="check">✓</span> Agent 间自动协作（CEO spawn 子任务）</div>
+    <div class="achieve-item"><span class="check">✓</span> 流式输出，长消息自动分段</div>
+    <div class="achieve-item"><span class="check">✓</span> 开源到 GitHub，附带安装脚本和教程</div>
+    <div class="achieve-item"><span class="check">✓</span> 配置脱敏，可安全分享</div>
+  </div>
+</div>
+
+<!-- ===== Slide 8: Scalability ===== -->
+<div class="slide scale-slide" data-slide="8">
+  <h2>可扩展的<span> 3 级团队架构</span></h2>
+  <div class="scale-content">
+    <div class="scale-box">
+      <h3>🏢 3 级架构，按需扩展</h3>
+      <div class="scale-tree">
+        <span class="highlight">第 1 级：CEO（决策层）</span><br>
+        │<br>
+        ├── <span class="highlight">第 2 级：业务线 Lead</span><br>
+        │&nbsp;&nbsp;&nbsp;├── 商务负责人<br>
+        │&nbsp;&nbsp;&nbsp;├── 运营负责人<br>
+        │&nbsp;&nbsp;&nbsp;├── 产研负责人<br>
+        │&nbsp;&nbsp;&nbsp;└── ... 按需添加更多业务线<br>
+        │<br>
+        └── <span class="highlight">第 3 级：执行层 Agent</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;├── 各 Lead 下可挂载专项 Agent<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;├── 人数按实际需求灵活配置<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;└── 只需新增 SOUL 文件即可扩展
+      </div>
+    </div>
+    <div class="scale-box">
+      <h3>🎯 可复用到其他业务</h3>
+      <div class="scale-scenarios">
+        <div class="scale-scenario">
+          <h4>🛒 电商团队</h4>
+          <p>CEO → 选品负责人 + 运营负责人 + 客服负责人</p>
+        </div>
+        <div class="scale-scenario">
+          <h4>📱 内容创业</h4>
+          <p>CEO → 内容主编 + 增长负责人 + 商业化负责人</p>
+        </div>
+        <div class="scale-scenario">
+          <h4>💻 技术团队</h4>
+          <p>CEO → 产品经理 + 技术负责人 + 测试负责人</p>
+        </div>
+        <div class="scale-scenario">
+          <h4>🎮 更多游戏业务线</h4>
+          <p>每个游戏复制一套配置，修改 SOUL 即可</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Slide 9: Next Steps ===== -->
+<div class="slide next-slide" data-slide="9">
+  <h2><span>下一步计划</span></h2>
+  <div class="next-steps">
+    <div class="next-step">
+      <div class="step-num">1</div>
+      <h3>团队推广</h3>
+      <p>组内同事通过 GitHub 一键部署，各自搭建 AI 团队</p>
+    </div>
+    <div class="next-step">
+      <div class="step-num">2</div>
+      <h3>知识库接入</h3>
+      <p>对接内部文档和业务数据，让 Agent 回答更精准、更贴合实际</p>
+    </div>
+    <div class="next-step">
+      <div class="step-num">3</div>
+      <h3>持续迭代</h3>
+      <p>根据实际使用反馈，优化 SOUL 定义和协作流程</p>
+    </div>
+  </div>
+  <div class="github-link">
+    项目已开源：<a href="https://github.com/allen615898416-droid/openclaw-company" target="_blank">github.com/allen615898416-droid/openclaw-company</a>
+  </div>
+</div>
+
+<!-- Navigation -->
+<div class="nav" id="nav"></div>
+<div class="page-num" id="pageNum">1 / 9</div>
+<div class="key-hint">← → 翻页 · F 全屏</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const nav = document.getElementById('nav');
+  const pageNum = document.getElementById('pageNum');
+  let current = 0;
+
+  // Create nav dots
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = `nav-dot${i === 0 ? ' active' : ''}`;
+    dot.onclick = () => goTo(i);
+    nav.appendChild(dot);
+  });
+
+  function goTo(index) {
+    if (index < 0 || index >= slides.length) return;
+    slides[current].classList.remove('active');
+    nav.children[current].classList.remove('active');
+    current = index;
+    slides[current].classList.add('active');
+    nav.children[current].classList.add('active');
+    pageNum.textContent = `${current + 1} / ${slides.length}`;
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      goTo(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      goTo(current - 1);
+    } else if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+  });
+
+  // Touch support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) goTo(current + (diff > 0 ? 1 : -1));
+  });
+</script>
+
+</body>
+</html>
